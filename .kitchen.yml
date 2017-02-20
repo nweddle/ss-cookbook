@@ -1,0 +1,48 @@
+---
+driver:
+  name: ec2
+  aws_ssh_key_id: chef_demo
+  region: us-west-2
+  security_group_ids: sg-2560a741
+  subnet_id: subnet-5b32ef02
+  associate_public_ip: true
+  instance_type: m3.large
+  tags:
+    # Replace YOURNAME and YOURCOMPANY here
+    Name: "Chef Training Node for YOURNAME,YOURCOMPANY"
+    created-by: "test-kitchen"
+    user: <%= ENV['USER'] %>
+
+provisioner:
+  name: chef_zero
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: true
+  client_rb:
+    data_collector.server_url: 'https://automate.automate-demo.com/data-collector/v0/'
+    data_collector.token: '93a49a4f2482c64126f7b6015e6b0f30284287ee4054ff8807fb63d9cbd1c506'
+    data_collector.raise_on_failure: true
+    ssl_verify_mode: ':verify_none'
+    verify_api_cert: false
+
+verifier:
+  name: inspec
+  format: documentation
+
+platforms:
+  - name: windows-2012r2
+    driver_config:
+      retryable_tries: 80
+    transport:
+      ssh_key: C:\Users\Administrator\.ssh\id_rsa
+
+suites:
+  - name: default
+    run_list:
+      - recipe[screensaver::default]
+    verifier:
+      inspec_tests:
+        - name: ssl-benchmark
+          git: https://github.com/dev-sec/ssl-baseline
+    attributes:
