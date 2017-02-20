@@ -43,6 +43,6 @@ suites:
       - recipe[screensaver::default]
     verifier:
       inspec_tests:
-        - name: ssl-benchmark
-          git: https://github.com/dev-sec/ssl-baseline
+        - name: ss-compliance
+          git: https://github.com/nweddle/ss-compliance
     attributes:
