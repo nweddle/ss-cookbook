@@ -1,9 +1,9 @@
-name 'screensaver'
+name 'ss-cookbook'
 maintainer 'The Authors'
 maintainer_email 'you@example.com'
 license 'all_rights'
-description 'Installs/Configures screensaver'
-long_description 'Installs/Configures screensaver'
+description 'Configures Windows Screen Saver'
+long_description 'Configures Windows Screen Saver'
 version '0.1.0'
 
 # The `issues_url` points to the location where issues for this cookbook are
