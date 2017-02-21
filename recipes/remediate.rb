@@ -8,13 +8,13 @@ registry_key 'HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Pane
   values [
     { name: 'ScreenSaveActive',
       type: :string,
-      data: 1 },
+      data: '1' },
     { name: 'ScreenSaverIsSecure',
       type: :string,
-      data: 1 },
+      data: '1' },
     { name: 'ScreenSaveTimeOut',
       type: :string,
-      data: 600 }
+      data: '600' }
   ]
   recursive true
   action :create
