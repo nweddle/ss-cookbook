@@ -14,12 +14,19 @@ registry_key 'HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Pane
       data: 1 },
     { name: 'ScreenSaveTimeOut',
       type: :string,
-      data: 0 }
+      data: 600 }
   ]
+  recursive true
   action :create
+  notifies :run, 'execute[group-policy-update]', :immediately
+end
+
+execute 'group-policy-update' do
+  command 'gpupdate /force'
+  action :nothing
 end
 
 windows_package 'Slack' do
-  source 'https://downloads.slack-edge.com/releases_x64/SlackSetup.exe'
-  checksum 'afd5a6d28b8a2c41d63484f79869163e69a6a40ab93b759394829dd11376af52'
+  source 'https://slack-ssb-updates.global.ssl.fastly.net/releases_x64/SlackSetup.msi'
+  checksum '70d30a739702a05625ac3d606a158526e814d436a8cfbdd5304f68430cae6bc7'
 end
