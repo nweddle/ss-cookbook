@@ -1,23 +1,20 @@
 ---
 driver:
   name: ec2
-  aws_ssh_key_id: chef_demo
   region: us-west-2
   security_group_ids: sg-2560a741
   subnet_id: subnet-5b32ef02
   associate_public_ip: true
   instance_type: m3.large
+  aws_ssh_key_id: chef_demo
+  user_data: 'C:/Users/Administrator/windows_user_data'
   tags:
-    # Replace YOURNAME and YOURCOMPANY here
-    Name: "Chef Training Node for YOURNAME,YOURCOMPANY"
+    Name: "Chef Demo Test Kitchen Instance"
     created-by: "test-kitchen"
-    user: <%= ENV['USER'] %>
+    user: Administrator
 
 provisioner:
   name: chef_zero
-  # You may wish to disable always updating cookbooks in CI or other testing environments.
-  # For example:
-  #   always_update_cookbooks: <%= !ENV['CI'] %>
   always_update_cookbooks: true
   client_rb:
     data_collector.server_url: 'https://automate.automate-demo.com/data-collector/v0/'
@@ -28,7 +25,6 @@ provisioner:
 
 verifier:
   name: inspec
-  format: documentation
 
 platforms:
   - name: windows-2012r2
@@ -40,7 +36,7 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[screensaver::default]
+      - recipe[ss-cookbook::default]
     verifier:
       inspec_tests:
         - name: ss-compliance
