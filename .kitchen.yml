@@ -15,7 +15,7 @@ driver:
 
 provisioner:
   name: chef_zero
-  always_update_cookbooks: true
+  always_update_cookbooks: false
   client_rb:
     data_collector.server_url: 'https://automate.automate-demo.com/data-collector/v0/'
     data_collector.token: '93a49a4f2482c64126f7b6015e6b0f30284287ee4054ff8807fb63d9cbd1c506'
