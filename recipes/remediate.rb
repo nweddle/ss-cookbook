@@ -4,6 +4,8 @@
 #
 # Copyright:: 2017, The Authors, All Rights Reserved.
 
+include_recipe 'audit'
+
 registry_key 'HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Panel\Desktop' do
   values [
     { name: 'ScreenSaveActive',
@@ -28,5 +30,5 @@ end
 
 windows_package 'Slack' do
   source 'https://slack-ssb-updates.global.ssl.fastly.net/releases_x64/SlackSetup.msi'
-  checksum '70d30a739702a05625ac3d606a158526e814d436a8cfbdd5304f68430cae6bc7'
+  checksum 'fc0d2120a513f770f45258aa3fe3043525a4e492a9da7b3fe9d0c15c3f7d2152'
 end

@@ -3,42 +3,50 @@ driver:
   name: ec2
   region: us-west-2
   security_group_ids: sg-2560a741
-  subnet_id: subnet-5b32ef02
   associate_public_ip: true
-  instance_type: m3.large
-  aws_ssh_key_id: chef_demo
-  user_data: 'C:/Users/Administrator/windows_user_data'
+  aws_ssh_key_id: <%= ENV['EC2_SSH_KEY_NAME'] %>
   tags:
-    Name: "Chef Demo Test Kitchen Instance"
-    created-by: "test-kitchen"
-    user: Administrator
+    Name: 'bjc_workstation-localdev-kitchen-instance'
+    created-by: 'test-kitchen'
+    user: <%= ENV['USER'] %>
+    X-Dept: Sales
+    X-Contact: <%= ENV['USER'] %>
+    X-Production: 'false'
 
 provisioner:
   name: chef_zero
-  always_update_cookbooks: false
+<% if ENV['AUTOMATE_URL'] %>
   client_rb:
-    data_collector.server_url: 'https://automate.automate-demo.com/data-collector/v0/'
+    data_collector.server_url: 'https://<%= ENV['AUTOMATE_URL'] %>/data-collector/v0/'
+    # data_collector.server_url: 'https://automate.automate-demo.com/data-collector/v0/'
     data_collector.token: '93a49a4f2482c64126f7b6015e6b0f30284287ee4054ff8807fb63d9cbd1c506'
-    data_collector.raise_on_failure: true
+    data_collector.raise_on_failure: false
     ssl_verify_mode: ':verify_none'
     verify_api_cert: false
+<% end %>
 
 verifier:
   name: inspec
+  inspec_tests:
+    - name: ss-compliance
+      git: https://github.com/nweddle/ss-compliance
 
 platforms:
   - name: windows-2012r2
     driver_config:
-      retryable_tries: 80
+      instance_type: m3.large
+      image_id: ami-1562d075
+      user_data: 'windows_user_data'
     transport:
-      ssh_key: C:\Users\Administrator\.ssh\id_rsa
+      ssh_key: <%= ENV['EC2_SSH_KEY_PATH'] %>
 
 suites:
   - name: default
     run_list:
       - recipe[ss-cookbook::default]
-    verifier:
-      inspec_tests:
-        - name: ss-compliance
-          git: https://github.com/nweddle/ss-compliance
     attributes:
+      audit:
+        collector: <%= !!ENV['AUTOMATE_URL'] ? 'chef-visibility' : 'json-file' %>
+        profiles:
+          - name: ss-compliance
+            url: https://github.com/nweddle/ss-compliance/archive/master.zip
